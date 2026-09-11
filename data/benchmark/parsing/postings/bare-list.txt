@@ -1,0 +1,17 @@
+Platform Engineer
+Corvid Systems
+
+Requirements
+Python
+Kubernetes
+Terraform
+Postgres
+Five years of backend experience
+
+Nice to have
+Go
+Kafka
+
+Responsibilities
+Own the deployment pipeline
+Carry the pager one week in four

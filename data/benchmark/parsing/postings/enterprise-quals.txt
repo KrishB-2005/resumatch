@@ -1,0 +1,24 @@
+Title: Staff Software Engineer, Data Platform
+Company: Meridian Health Systems
+
+Position Overview
+Meridian operates the clinical data platform used by 200 hospitals. This role
+sits on the ingestion team and reports to the Director of Data Engineering.
+
+Minimum Qualifications
+1. Bachelor's degree in Computer Science or equivalent practical experience
+2. 8+ years of professional software engineering experience
+3. Proficiency in Java or Scala
+4. Experience with Apache Spark and distributed data processing
+5. Working knowledge of Kafka for event streaming
+
+Preferred Qualifications
+1. Experience with Snowflake or another cloud data warehouse
+2. Familiarity with HIPAA and healthcare data standards
+3. Airflow or a comparable orchestration framework
+4. Contributions to open source data tooling
+
+Responsibilities
+1. Design and operate ingestion pipelines processing 40TB per day
+2. Partner with clinical informatics to model new data domains
+3. Participate in a weekly on-call rotation

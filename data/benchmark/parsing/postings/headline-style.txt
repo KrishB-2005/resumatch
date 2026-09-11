@@ -1,0 +1,26 @@
+Senior Backend Engineer, Payments
+Lumen Financial · New York, NY · Hybrid
+
+About us
+Lumen is a Series C company rebuilding the payment rails that small businesses
+depend on. We have raised $80M, serve 12,000 merchants, and believe engineers
+should own what they ship. Our team of 40 is distributed across three offices.
+
+What you'll do
+- Own the ledger service end to end, from schema design through on-call
+- Partner with compliance to take new payment products through review
+- Mentor two junior engineers and run the weekly design review
+
+What we're looking for
+- Five or more years building backend services in production
+- Deep Python experience, including async and type annotations
+- Experience designing and operating REST APIs at scale, including versioning
+  and backwards compatibility across client versions
+- Comfort with Postgres under load, including query planning and index design
+- A track record of owning systems that handle money, where correctness is
+  not negotiable
+
+Nice to haves
+- Kafka or another log-based streaming system
+- Terraform, or another infrastructure-as-code tool
+- Prior work in a regulated environment

@@ -1,0 +1,17 @@
+Full Stack Engineer (Founding)
+
+Our mission
+We think hiring is broken and we are building the tools to fix it. Two founders,
+both engineers, backed by a seed round from people we respect.
+
+The role
+You would be our third engineer. We are looking for someone with at least four
+years of experience who is comfortable owning a feature from database schema
+through to the React components a user touches. You should be fluent in
+TypeScript and have real production experience with Node.js. We run everything
+on AWS and would like you to be comfortable there, though you can learn it here
+if you are not.
+
+We care much more about whether you can ship than which frameworks you have
+used. That said, familiarity with Next.js and Tailwind CSS would let you move
+faster on day one, and anyone who has worked with Postgres will feel at home.

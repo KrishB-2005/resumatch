@@ -114,7 +114,16 @@ job   ──┘                                  ↑
 detection; requirement importance comes from the heading a line sits under,
 because that is how postings actually encode it — everything under *Nice to
 have* is optional regardless of how it is phrased. Company marketing prose under
-*About us* is skipped rather than scored.
+*About us* is skipped rather than scored, and the block ends at the next heading
+whether or not that heading is one the parser recognises.
+
+Three rules here exist because documents are messier than they look. A bullet is
+never a heading, so *"• Strong Python required"* stays a requirement instead of
+reading as a *Requirements* label. A wrapped line rejoins the one above it, so a
+bullet spanning two lines is one requirement rather than two, the second a
+fragment. And everything above the first recognised heading is masthead — job
+title, company, location — rather than requirements no candidate could ever
+meet. All three are measured by the parsing benchmark below.
 
 **Canonicalisation** runs a hand-written alias table over 166 skills, longest
 phrase first so `machine learning` wins over the bare `learning` inside it, and
@@ -200,7 +209,7 @@ That is what caught `confidence: Field(ge=0, le=1)`: Pydantic emits it as
 `minimum`/`maximum`, both providers reject numeric range keywords in strict
 mode, and every semantic call would have failed with a 400 on a real key.
 
-## Benchmark
+## Benchmarks
 
 "I improved the matcher" is not a claim anyone can check.
 
@@ -209,19 +218,55 @@ resumatch benchmark
 ```
 
 ```
+  matching
+
   30/30 cases
+
+  no failures
+
+  parsing
+
+  8/8 documents
 
   no failures
 ```
 
-30 hand-labelled requirement/resume pairs, each carrying the reasoning a human
-would give, so a failure can be argued with — sometimes the right fix is the
-label. Failing cases stay in the file rather than being deleted, and a test
-asserts both the floor on the case count and that the interesting categories are
-still represented, because pruning is the easiest way to make a score go up.
+Two suites, because they fail in different places.
 
-It has already earned its keep: it is what surfaced the substring bug above and
-the *"server-side JavaScript with Node.js"* over-reading of "and".
+**matching** is 30 hand-labelled requirement/resume pairs. It measures the
+scoring rules starting from clean sentences.
+
+**parsing** is 8 whole postings and resumes in the shapes people actually send
+them — a headline instead of a `Title:` field, numbered lists, all-caps
+headings, requirements written as paragraphs, one technology per line with no
+bullet, and a resume mangled the way `pypdf` mangles a two-column PDF. It
+measures whether the right sentences came out at all.
+
+That second suite is the one that matters most, and it did not exist at first.
+Every test above it passed while the parser was quietly wrong, because they all
+fed it sentences somebody had already extracted by hand. Run whole documents
+through and it scored **2/7** on the first attempt:
+
+- A posting whose next heading after *"Our mission"* was *"The role"* parsed to
+  a single requirement — its own title. The context block never closed, so the
+  candidate was scored against nothing.
+- `• Strong Python required` is short and contains "required", so it read as a
+  *Requirements* heading and vanished from the posting.
+- Wrapped bullets became two requirements, the second a fragment — *"and
+  backwards compatibility across client versions"* — naming no skill and
+  impossible to satisfy.
+- The job title and company line were scored as requirements: permanent misses
+  no candidate can fix.
+- A phone number became resume evidence, and `github.com/someone` handed the
+  candidate a `git` skill they never claimed.
+- *"Five or more years"* extracted no tenure at all, because the pattern only
+  matched digits.
+
+Both suites carry, per case, the reasoning a human would give, so a failure can
+be argued with — sometimes the right fix is the label. Failing cases stay in the
+file rather than being deleted, and tests assert a floor on the case count and
+that the interesting categories are still represented, because pruning is the
+easiest way to make a score go up.
 
 ## Install and run
 
@@ -247,7 +292,7 @@ cp .env.example .env    # then set one key
 | `match` | score a resume against a posting and print what to change |
 | `read` | show how a document was parsed — check this first when a score looks wrong |
 | `skills` | scan text for known skills, or list the vocabulary |
-| `benchmark` | run the matcher against the hand-labelled cases |
+| `benchmark` | run the hand-labelled cases — `--suite matching`, `--suite parsing`, or both |
 
 ```bash
 resumatch match resume.pdf job.txt --verbose --json out/report.json
@@ -272,7 +317,7 @@ provider that can be made to return exactly the answer worth testing.
 pytest
 ```
 
-107 tests. Most of them exist because the first implementation got something
+140 tests. Most of them exist because the first implementation got something
 wrong:
 
 - Comparing the whole requirement sentence against a resume line is never true,
@@ -289,13 +334,22 @@ wrong:
 - Every multi-skill requirement was treated as a choice, so a resume with
   Docker alone scored full marks against "Docker and Kubernetes".
 - `confidence` carried a range constraint that both model providers reject.
+- Six separate parser bugs, all listed above, none of which any unit test could
+  see because none of them fed it a whole document.
 
 ## Status
 
-Deterministic core and semantic pass are done, tested and benchmarked. Still to
-build:
+Deterministic core and semantic pass are done, tested and benchmarked at both
+layers. Still to build:
 
 - **Rewrite suggestions** — given a gap and the resume's voice, draft the line.
+- **Harder benchmark cases.** Both suites currently pass completely, which
+  means neither has headroom left to measure anything. Negations ("no
+  Kubernetes required"), seniority mismatches, and skills outside the
+  vocabulary are the obvious next cases.
+- **A real model behind the semantic pass.** It has only ever talked to a
+  scripted stub and a loopback server, so whether a live model actually honours
+  the cite-your-evidence rule is untested.
 - **Web UI**, the same way [TaxOrchestra](https://github.com/KrishB-2005/taxorchestra)
   does it: everything client-side, because a resume is a personal document and
   should not need a server.

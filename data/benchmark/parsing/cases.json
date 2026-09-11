@@ -1,0 +1,310 @@
+{
+  "about": "Whole postings and resumes, labelled with what a careful human reader would say comes out of them. The matching benchmark starts from clean sentences somebody already extracted; this one starts from the document, because that is where the score actually goes wrong. Failing cases stay in the file.",
+  "cases": [
+    {
+      "id": "posting-headline-style",
+      "kind": "job",
+      "file": "postings/headline-style.txt",
+      "why": "The common shape: a headline instead of a Title: field, an About us block, and bullets that wrap onto a second line.",
+      "expect": {
+        "title_contains": "Senior Backend Engineer",
+        "requirement_count": 11,
+        "required_count": 8,
+        "preferred_count": 3,
+        "must_include": [
+          {
+            "contains": "Deep Python experience",
+            "importance": "required",
+            "skills": ["python"]
+          },
+          {
+            "contains": "versioning",
+            "importance": "required",
+            "note": "one requirement, not two — the bullet wraps onto a second line"
+          },
+          {
+            "contains": "Mentor two junior engineers",
+            "importance": "required",
+            "kind": "responsibility"
+          },
+          {
+            "contains": "Kafka",
+            "importance": "preferred",
+            "skills": ["kafka"]
+          },
+          {
+            "contains": "Terraform",
+            "importance": "preferred",
+            "skills": ["terraform"]
+          }
+        ],
+        "must_not_include": [
+          "Series C",
+          "raised $80M",
+          "team of 40"
+        ]
+      }
+    },
+    {
+      "id": "posting-terse-startup",
+      "kind": "job",
+      "file": "postings/terse-startup.txt",
+      "why": "All-caps headings, bullet glyphs, and short requirement lines that happen to contain the words 'required' and 'must'.",
+      "expect": {
+        "title_contains": "ML Infrastructure Engineer",
+        "requirement_count": 10,
+        "required_count": 7,
+        "preferred_count": 3,
+        "must_include": [
+          {
+            "contains": "Strong Python required",
+            "importance": "required",
+            "skills": ["python"],
+            "note": "contains the word 'required' and is short, but it is a requirement, not a heading"
+          },
+          {
+            "contains": "PyTorch experience is a must",
+            "importance": "required",
+            "skills": ["pytorch"],
+            "note": "same trap with 'must'"
+          },
+          {
+            "contains": "SQL",
+            "importance": "required",
+            "skills": ["sql"],
+            "note": "a one-word bullet is still a requirement"
+          },
+          {
+            "contains": "CUDA",
+            "importance": "preferred",
+            "skills": ["cuda"]
+          },
+          {
+            "contains": "Own the training cluster",
+            "importance": "required",
+            "kind": "responsibility"
+          }
+        ],
+        "must_not_include": [
+          "Tiny team, big GPUs"
+        ]
+      }
+    },
+    {
+      "id": "posting-enterprise-quals",
+      "kind": "job",
+      "file": "postings/enterprise-quals.txt",
+      "why": "Explicit Title:/Company: fields, numbered lists instead of bullets, and Minimum/Preferred Qualifications headings.",
+      "expect": {
+        "title_contains": "Staff Software Engineer",
+        "company_contains": "Meridian Health Systems",
+        "requirement_count": 12,
+        "required_count": 8,
+        "preferred_count": 4,
+        "must_include": [
+          {
+            "contains": "Bachelor's degree",
+            "importance": "required",
+            "kind": "education"
+          },
+          {
+            "contains": "8+ years",
+            "importance": "required",
+            "kind": "experience",
+            "years": 8
+          },
+          {
+            "contains": "Apache Spark",
+            "importance": "required",
+            "skills": ["spark"]
+          },
+          {
+            "contains": "Snowflake",
+            "importance": "preferred",
+            "skills": ["snowflake"]
+          },
+          {
+            "contains": "Airflow",
+            "importance": "preferred",
+            "skills": ["airflow"]
+          },
+          {
+            "contains": "ingestion pipelines",
+            "importance": "required",
+            "kind": "responsibility"
+          }
+        ],
+        "must_not_include": [
+          "200 hospitals",
+          "reports to the Director"
+        ]
+      }
+    },
+    {
+      "id": "posting-prose-requirements",
+      "kind": "job",
+      "file": "postings/prose-requirements.txt",
+      "why": "No bullets at all. Plenty of real postings write the requirements as paragraphs, and the skills still have to come out.",
+      "expect": {
+        "title_contains": "Full Stack Engineer",
+        "skills_anywhere": [
+          "react",
+          "typescript",
+          "node.js",
+          "aws",
+          "next.js",
+          "tailwind css",
+          "postgresql"
+        ],
+        "must_not_include": [
+          "hiring is broken",
+          "seed round"
+        ]
+      }
+    },
+    {
+      "id": "posting-bare-list",
+      "kind": "job",
+      "file": "postings/bare-list.txt",
+      "why": "One technology per line with no bullet at all. These lines have the shape of a heading — short, unpunctuated — so anything keying on shape alone drops the whole posting.",
+      "expect": {
+        "title_contains": "Platform Engineer",
+        "requirement_count": 9,
+        "required_count": 7,
+        "preferred_count": 2,
+        "must_include": [
+          {
+            "contains": "Python",
+            "importance": "required",
+            "skills": ["python"]
+          },
+          {
+            "contains": "Terraform",
+            "importance": "required",
+            "skills": ["terraform"]
+          },
+          {
+            "contains": "Five years",
+            "importance": "required",
+            "kind": "experience",
+            "years": 5
+          },
+          {
+            "contains": "Go",
+            "importance": "preferred",
+            "skills": ["go"],
+            "note": "a bare ambiguous name, and the only word on its line"
+          },
+          {
+            "contains": "Carry the pager",
+            "importance": "required",
+            "kind": "responsibility"
+          }
+        ],
+        "must_not_include": ["Corvid Systems"]
+      }
+    },
+    {
+      "id": "resume-conventional",
+      "kind": "resume",
+      "file": "resumes/conventional.txt",
+      "why": "The well-behaved case: clear all-caps headings, wrapped bullets, a skills block at the end.",
+      "expect": {
+        "sections_present": ["summary", "experience", "projects", "education", "skills"],
+        "skills_anywhere": [
+          "python",
+          "typescript",
+          "react",
+          "sql",
+          "go",
+          "docker",
+          "kubernetes",
+          "postgresql",
+          "kafka",
+          "terraform",
+          "aws",
+          "rest"
+        ],
+        "lines": [
+          {
+            "contains": "double-entry ledger",
+            "section": "experience",
+            "skills": ["python"]
+          },
+          {
+            "contains": "sharded setup",
+            "section": "experience",
+            "note": "second half of a wrapped bullet must not become its own line"
+          },
+          {
+            "contains": "ledgerfmt",
+            "section": "projects"
+          },
+          {
+            "contains": "B.S. Computer Science",
+            "section": "education"
+          }
+        ],
+        "must_not_include": [
+          "(555) 018-2274"
+        ]
+      }
+    },
+    {
+      "id": "resume-no-headings",
+      "kind": "resume",
+      "file": "resumes/no-headings.txt",
+      "why": "A resume written as prose with no section headings. Everything should still be readable evidence — sections are a bonus, not a prerequisite.",
+      "expect": {
+        "evidence_min": 6,
+        "skills_anywhere": [
+          "python",
+          "pytorch",
+          "pandas",
+          "scikit-learn",
+          "docker",
+          "airflow",
+          "sql",
+          "flask"
+        ],
+        "lines": [
+          {
+            "contains": "defect",
+            "note": "the wrapped sentence about defect detection must survive as evidence"
+          }
+        ]
+      }
+    },
+    {
+      "id": "resume-pdf-extracted",
+      "kind": "resume",
+      "file": "resumes/pdf-extracted.txt",
+      "why": "What pypdf actually hands back: doubled spaces, headings on their own lines, dates and job titles split apart, sentences broken mid-clause.",
+      "expect": {
+        "sections_present": ["experience", "education", "skills"],
+        "skills_anywhere": [
+          "scala",
+          "python",
+          "sql",
+          "spark",
+          "kafka",
+          "snowflake",
+          "dbt",
+          "airflow",
+          "tableau"
+        ],
+        "lines": [
+          {
+            "contains": "streaming ingestion",
+            "section": "experience",
+            "note": "doubled spaces must not stop skills being found in the line"
+          },
+          {
+            "contains": "B.S.",
+            "section": "education"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+Priya Raman
+priya.raman@example.com | (555) 018-2274 | github.com/praman | Boston, MA
+
+SUMMARY
+Backend engineer with six years building payment and ledger systems. Comfortable
+owning a service from schema through on-call.
+
+WORK EXPERIENCE
+
+Halyard Payments — Senior Software Engineer, 2022–present
+- Rebuilt the double-entry ledger in Python, cutting reconciliation breaks from
+  40 per week to under 3 while handling 2M transactions per day.
+- Designed the idempotency layer for the public REST API, eliminating duplicate
+  charges across 12 client integrations.
+- Ran the migration from a single Postgres instance to a sharded setup with no
+  customer-visible downtime.
+
+Corvid Systems — Software Engineer, 2019–2022
+- Built internal tooling in TypeScript and React used by 60 operations staff.
+- Introduced Kafka for order events, decoupling four services that had been
+  sharing a database.
+
+PROJECTS
+
+ledgerfmt — open-source ledger file formatter
+- Parses and canonicalises plain-text accounting files. 700 GitHub stars.
+
+EDUCATION
+B.S. Computer Science, Boston University, 2019
+
+TECHNICAL SKILLS
+Languages: Python, TypeScript, SQL, some Go
+Infrastructure: Docker, Kubernetes, Postgres, Kafka, Terraform, AWS

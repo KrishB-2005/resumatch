@@ -1,0 +1,19 @@
+Marcus Oyelaran
+marcus.oyelaran@example.com | Chicago, IL
+
+Machine learning engineer, four years, mostly computer vision.
+
+Strata Robotics, ML Engineer, 2021 to now. Trained and deployed the defect
+detection models running on 30 factory lines. Cut false positives by 38% by
+reworking the augmentation pipeline in PyTorch. Own the retraining schedule and
+the Airflow DAGs behind it.
+
+Bellwether Labs, Data Scientist, 2020 to 2021. Built forecasting models in
+Python with Pandas and scikit-learn. Shipped a Flask service that the sales team
+still uses.
+
+Experience building distributed training jobs across multiple GPUs.
+
+B.S. Applied Mathematics, University of Illinois, 2020.
+
+Python, PyTorch, Pandas, scikit-learn, Docker, Airflow, SQL, Flask.

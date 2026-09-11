@@ -1,0 +1,29 @@
+Dana  Whitfield
+dana.whitfield@example.com
+linkedin.com/in/dwhitfield
+Seattle, WA
+
+Experience
+Northgate  Analytics
+Senior  Data  Engineer
+Mar 2021 - Present
+Built  the  streaming  ingestion  layer  in  Scala  and  Apache  Spark,  moving
+1.2TB  daily  from  Kafka  into  Snowflake.
+Replaced  a  nightly  batch  job  with  incremental  dbt  models,  taking  the
+freshness  SLA  from  18  hours  to  20  minutes.
+Mentored  three  analysts  into  analytics  engineering  roles.
+
+Fairhaven  Group
+Data  Analyst
+Jun 2019 - Feb 2021
+Automated  the  weekly  reporting  pack  in  Python,  saving  roughly  10  hours
+of  manual  work  per  week.
+Rebuilt  the  executive  dashboard  in  Tableau.
+
+Education
+University  of  Washington
+B.S.  Informatics
+2019
+
+Skills
+Scala, Python, SQL, Spark, Kafka, Snowflake, dbt, Airflow, Tableau

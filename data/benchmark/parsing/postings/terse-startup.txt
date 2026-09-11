@@ -1,0 +1,20 @@
+ML Infrastructure Engineer
+
+WHO WE ARE
+Tiny team, big GPUs. We train and serve open models for regulated industries.
+
+REQUIREMENTS
+• Strong Python required
+• Docker and Kubernetes in production
+• PyTorch experience is a must
+• Experience with distributed training
+• SQL
+
+BONUS
+• Ray or another distributed compute framework
+• CUDA kernels
+• You have shipped an LLM product to real users
+
+WHAT YOU'LL DO
+• Own the training cluster
+• Keep inference latency under control

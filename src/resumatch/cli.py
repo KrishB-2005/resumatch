@@ -24,7 +24,7 @@ import typer
 from dotenv import load_dotenv
 
 from resumatch import benchmark as bench
-from resumatch import skills
+from resumatch import parsebench, skills
 from resumatch.llm.client import LLMError, build_client
 from resumatch.parsing import parse_job, parse_resume, read_text
 from resumatch.report import build_report, format_report
@@ -58,7 +58,7 @@ def match(
         str | None,
         typer.Option(
             "--provider",
-            help="openai or fixture. Defaults to openai when OPENAI_API_KEY is set.",
+            help="openai, anthropic, or fixture. Defaults to whichever key is set.",
         ),
     ] = None,
     max_calls: Annotated[
@@ -180,19 +180,44 @@ def skills_command(
 
 @app.command("benchmark")
 def benchmark_command(
+    suite: Annotated[
+        str,
+        typer.Option("--suite", help="matching, parsing, or all."),
+    ] = "all",
     verbose: Annotated[
         bool, typer.Option("--verbose", "-v", help="List every case, not just failures.")
     ] = False,
 ) -> None:
-    """Run the matcher against the hand-labelled cases.
+    """Run the hand-labelled cases.
 
-    The number that says whether a change to the vocabulary or the matching
-    rules actually helped.
+    Two suites, because they fail in different places. `matching` starts from
+    clean sentences and measures the scoring rules; `parsing` starts from whole
+    documents and measures whether the right sentences came out in the first
+    place — which is where a confident, wrong score usually begins.
     """
-    results = bench.run()
-    typer.echo(bench.format_results(results, verbose=verbose))
+    wanted = suite.strip().lower()
+    if wanted not in ("all", "matching", "parsing"):
+        typer.secho(
+            f"Unknown suite {suite!r}. Expected matching, parsing, or all.",
+            fg=typer.colors.RED,
+            err=True,
+        )
+        raise typer.Exit(code=1)
 
-    failed = [r for r in results if not r.passed]
+    failed = False
+
+    if wanted in ("all", "matching"):
+        typer.secho("  matching", fg=typer.colors.BLUE)
+        results = bench.run()
+        typer.echo(bench.format_results(results, verbose=verbose))
+        failed |= any(not r.passed for r in results)
+
+    if wanted in ("all", "parsing"):
+        typer.secho("  parsing", fg=typer.colors.BLUE)
+        parse_results = parsebench.run()
+        typer.echo(parsebench.format_results(parse_results, verbose=verbose))
+        failed |= any(not r.passed for r in parse_results)
+
     if failed:
         raise typer.Exit(code=1)
 
