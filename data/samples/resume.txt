@@ -7,7 +7,7 @@ owning a feature from schema to deploy.
 
 EXPERIENCE
 
-Meridian Logistics — Senior Backend Engineer, 2022-present
+Meridian Logistics, Senior Backend Engineer, 2022-present
 - Designed a Flask REST API serving 40,000 daily requests, cutting p99 latency
   from 820ms to 210ms by replacing N+1 queries with batched Postgres reads.
 - Migrated a monolith to six containerised services on k8s, taking deploys from
@@ -15,7 +15,7 @@ Meridian Logistics — Senior Backend Engineer, 2022-present
 - Built an ingestion pipeline in Python and Pandas normalising 12 partner feeds
   into one warehouse schema.
 
-Fernwood Analytics — Software Engineer, 2020-2022
+Fernwood Analytics, Software Engineer, 2020-2022
 - Shipped an internal dashboard in React and TS used by 200 analysts.
 - Added a sklearn classifier that flagged anomalous shipments, cutting manual
   review volume by 45%.
@@ -23,7 +23,7 @@ Fernwood Analytics — Software Engineer, 2020-2022
 
 PROJECTS
 
-Tidewater — open-source CLI for schema diffs
+Tidewater, an open-source CLI for schema diffs
 - Parses two Postgres schemas and emits a reviewable migration plan.
 - 400 GitHub stars; packaged and published to PyPI.
 
