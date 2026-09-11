@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Secrets
+.env
+.env.local
+
+# Runtime artifacts
+out/
+
+# Real resumes and job descriptions are personal documents. The bundled
+# samples under data/samples are synthetic; anything you drop here is not.
+data/private/
+*.resume.pdf
+*.resume.txt
+
+# OS
+.DS_Store
+Thumbs.db

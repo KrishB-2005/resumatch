@@ -1,0 +1,25 @@
+Title: Senior AI Platform Engineer
+Company: Northwind Labs
+
+About the role
+We are building the platform our research teams use to ship LLM features.
+
+Requirements
+- 4+ years of professional backend engineering experience
+- Strong Python, including async and typing
+- Experience designing and operating REST APIs at scale
+- Hands-on with Docker and Kubernetes in production
+- Working knowledge of Postgres, including query optimisation
+- Bachelor's degree in Computer Science or equivalent experience
+
+Nice to have
+- Experience with LLM applications, RAG pipelines, or prompt engineering
+- Familiarity with LangChain or similar orchestration frameworks
+- Exposure to vector databases
+- Terraform or other infrastructure-as-code tooling
+- Front-end work in React or TypeScript
+
+Responsibilities
+- Own the serving layer for our retrieval augmented generation stack
+- Mentor two junior engineers and run code reviews
+- Partner with research to take prototypes to production
