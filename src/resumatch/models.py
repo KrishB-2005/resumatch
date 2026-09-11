@@ -132,6 +132,22 @@ class RequirementMatch(StrictModel):
     note: str | None = Field(
         default=None, description="Why this was or was not considered a match"
     )
+    literal_skills: list[str] = Field(
+        default_factory=list,
+        description="Skills both documents spell the same way",
+    )
+    alias_skills: list[str] = Field(
+        default_factory=list,
+        description="Skills reachable only through the alias table",
+    )
+    missing_skills: list[str] = Field(
+        default_factory=list,
+        description="Skills this requirement names that the resume never evidences",
+    )
+    semantically_assessed: bool = Field(
+        default=False,
+        description="Whether the semantic pass reached a verdict, yes or no",
+    )
 
     @property
     def matched(self) -> bool:
@@ -145,8 +161,13 @@ class RequirementMatch(StrictModel):
         nothing to check it against. Counting that as a miss would deflate the
         score with something the tool never actually assessed — it is reported
         for a human to check instead.
+
+        The semantic pass can make such a requirement scoreable by reaching a
+        verdict on it. Note that a *no* counts too: scoring only the yes
+        verdicts would mean running the model could never lower a score, which
+        would make it a score-inflation device rather than an assessment.
         """
-        return bool(self.requirement.skills)
+        return bool(self.requirement.skills) or self.semantically_assessed
 
     @property
     def earned(self) -> int:

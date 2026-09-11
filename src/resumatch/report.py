@@ -12,6 +12,7 @@ The semantic pass in `agents.py` adds to this; it does not replace it.
 from __future__ import annotations
 
 from resumatch import matching
+from resumatch.llm.client import LLMClient
 from resumatch.models import (
     Importance,
     JobSpec,
@@ -40,9 +41,12 @@ def _alias_suggestions(matches: list[RequirementMatch]) -> list[Suggestion]:
     """
     out: list[Suggestion] = []
     for match in matches:
-        if match.method is not MatchMethod.ALIAS:
+        # Named per skill, not per requirement. "Docker and Kubernetes" can be
+        # literal on Docker and a synonym on Kubernetes at the same time, and
+        # the advice is only actionable if it says which word to add.
+        if not match.matched or not match.alias_skills:
             continue
-        wanted = ", ".join(match.requirement.skills)
+        wanted = ", ".join(match.alias_skills)
         out.append(
             Suggestion(
                 requirement_text=match.requirement.text,
@@ -65,14 +69,27 @@ def _gap_suggestions(matches: list[RequirementMatch]) -> list[Suggestion]:
         if match.matched or not match.scoreable:
             continue
         requirement = match.requirement
-        wanted = ", ".join(requirement.skills)
+        wanted = ", ".join(match.missing_skills or requirement.skills)
+
+        if match.literal_skills or match.alias_skills:
+            # Partly met: the posting asks for several things together and the
+            # resume covers some of them. Naming the whole list here would send
+            # someone off to add what they already have.
+            have = ", ".join(match.literal_skills + match.alias_skills)
+            message = (
+                f"Asks for all of these together. You evidence {have}, but {wanted} "
+                f"is missing — the requirement does not count until it is there."
+            )
+        else:
+            message = (
+                f"No evidence of {wanted} anywhere on the resume. If you have "
+                f"it, it needs a line; if you do not, this is a real gap."
+            )
+
         out.append(
             Suggestion(
                 requirement_text=requirement.text,
-                message=(
-                    f"No evidence of {wanted} anywhere on the resume. If you have "
-                    f"it, it needs a line; if you do not, this is a real gap."
-                ),
+                message=message,
                 severity=requirement.importance,
             )
         )
@@ -119,20 +136,56 @@ def _years_suggestions(matches: list[RequirementMatch]) -> list[Suggestion]:
     return out
 
 
+def _semantic_suggestions(matches: list[RequirementMatch]) -> list[Suggestion]:
+    """A model's judgement is worth flagging as a model's judgement."""
+    out: list[Suggestion] = []
+    for match in matches:
+        if match.method is not MatchMethod.SEMANTIC:
+            continue
+        out.append(
+            Suggestion(
+                requirement_text=match.requirement.text,
+                message=(
+                    f"Counted as met by the semantic pass, not by anything the "
+                    f"posting and your resume literally share. Worth a look: "
+                    f'"{match.evidence[0].text[:58]}" — {match.note or ""}'
+                ),
+                severity=Importance.PREFERRED,
+            )
+        )
+    return out
+
+
 def build_report(
     job: JobSpec,
     resume: Resume,
     *,
     provider: str = "fixture",
+    llm: LLMClient | None = None,
+    max_semantic_calls: int | None = None,
 ) -> MatchReport:
-    """Match, then derive advice from what the match established."""
+    """Match, then derive advice from what the match established.
+
+    Passing `llm` runs the semantic pass over whatever literal and alias
+    matching could not reach. Without it the report is fully deterministic,
+    which is the default and the mode the tests run in.
+    """
     matches = matching.match_all(job, resume)
+
+    if llm is not None:
+        from resumatch.agents import resolve_semantically
+
+        matches, _ = resolve_semantically(
+            matches, resume, llm, max_calls=max_semantic_calls
+        )
+        provider = llm.name
 
     suggestions: list[Suggestion] = []
     suggestions.extend(_gap_suggestions(matches))
     suggestions.extend(_alias_suggestions(matches))
     suggestions.extend(_years_suggestions(matches))
     suggestions.extend(_quantification_suggestions(matches))
+    suggestions.extend(_semantic_suggestions(matches))
 
     report = MatchReport(
         job_title=job.title,
@@ -193,6 +246,11 @@ def format_report(report: MatchReport, *, verbose: bool = False) -> str:
     for importance, (hit, total) in coverage.items():
         if total:
             add(f"    {importance.value:<10} {hit}/{total}")
+
+    methods = matching.coverage_by_method(report.matches)
+    if methods:
+        add("")
+        add("    matched by  " + "  ".join(f"{k}={v}" for k, v in methods.items()))
     add("")
 
     gaps = report.gaps(Importance.REQUIRED)

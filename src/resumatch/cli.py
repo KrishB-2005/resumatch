@@ -23,7 +23,9 @@ for _stream in (sys.stdout, sys.stderr):
 import typer
 from dotenv import load_dotenv
 
+from resumatch import benchmark as bench
 from resumatch import skills
+from resumatch.llm.client import LLMError, build_client
 from resumatch.parsing import parse_job, parse_resume, read_text
 from resumatch.report import build_report, format_report
 
@@ -45,6 +47,24 @@ def match(
     json_out: Annotated[
         Path | None, typer.Option("--json", help="Write the full report as JSON.")
     ] = None,
+    semantic: Annotated[
+        bool,
+        typer.Option(
+            "--semantic",
+            help="Ask a model about requirements naming no skill. Costs money.",
+        ),
+    ] = False,
+    provider: Annotated[
+        str | None,
+        typer.Option(
+            "--provider",
+            help="openai or fixture. Defaults to openai when OPENAI_API_KEY is set.",
+        ),
+    ] = None,
+    max_calls: Annotated[
+        int,
+        typer.Option("--max-calls", help="Cap on model calls for --semantic."),
+    ] = 12,
 ) -> None:
     """Match a resume against a posting and print what to change."""
     for path in (resume, job):
@@ -64,7 +84,22 @@ def match(
         )
         raise typer.Exit(code=1)
 
-    report = build_report(parsed_job, parsed_resume)
+    client = None
+    if semantic or provider:
+        try:
+            client = build_client(provider)
+        except LLMError as exc:
+            typer.secho(f"  {exc}", fg=typer.colors.RED, err=True)
+            raise typer.Exit(code=1) from None
+        typer.secho(
+            f"  semantic pass: {client.name} (up to {max_calls} calls)",
+            fg=typer.colors.BLUE,
+            err=True,
+        )
+
+    report = build_report(
+        parsed_job, parsed_resume, llm=client, max_semantic_calls=max_calls
+    )
     typer.echo(format_report(report, verbose=verbose))
 
     if json_out is not None:
@@ -78,6 +113,8 @@ def match(
         typer.echo("  Not scored — no named skill to check against:")
         for item in report.unscoreable:
             typer.echo(f"    ?  {item.requirement.text[:66]}")
+            if item.note:
+                typer.echo(f"       {item.note[:66]}")
         typer.echo("")
 
 
@@ -139,6 +176,25 @@ def skills_command(
             shown += f"  ({', '.join(alias_list)})"
         typer.echo(shown)
     typer.echo("")
+
+
+@app.command("benchmark")
+def benchmark_command(
+    verbose: Annotated[
+        bool, typer.Option("--verbose", "-v", help="List every case, not just failures.")
+    ] = False,
+) -> None:
+    """Run the matcher against the hand-labelled cases.
+
+    The number that says whether a change to the vocabulary or the matching
+    rules actually helped.
+    """
+    results = bench.run()
+    typer.echo(bench.format_results(results, verbose=verbose))
+
+    failed = [r for r in results if not r.passed]
+    if failed:
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":  # pragma: no cover

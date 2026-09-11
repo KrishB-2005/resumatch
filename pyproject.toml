@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-llm = ["anthropic>=0.40"]
+llm = ["openai>=1.60", "anthropic>=0.40"]
 api = ["fastapi>=0.111", "uvicorn[standard]>=0.30", "python-multipart>=0.0.9"]
 dev = ["pytest>=8.2", "pytest-cov>=5.0", "ruff>=0.5"]
 

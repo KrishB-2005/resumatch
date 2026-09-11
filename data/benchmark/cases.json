@@ -1,0 +1,236 @@
+{
+  "about": "Hand-labelled requirement/resume pairs. Each case states the answer a careful human reader would give, and why. Cases the tool gets wrong are kept in the file rather than deleted — the score is only worth reading if failures are allowed to show up in it.",
+  "cases": [
+    {
+      "id": "exact-python",
+      "requirement": "Strong Python, including async and typing",
+      "resume": ["Built an ingestion pipeline in Python and Pandas"],
+      "matched": true,
+      "method": "exact",
+      "why": "Both documents say Python."
+    },
+    {
+      "id": "exact-postgres-shared-alias",
+      "requirement": "Working knowledge of Postgres, including query optimisation",
+      "resume": ["Replaced N+1 queries with batched Postgres reads"],
+      "matched": true,
+      "method": "exact",
+      "why": "Both say Postgres, so no keyword filter risk even though the canonical name is postgresql."
+    },
+    {
+      "id": "alias-k8s",
+      "requirement": "Production experience with Kubernetes",
+      "resume": ["Migrated a monolith to six containerised services on k8s"],
+      "matched": true,
+      "method": "alias",
+      "why": "k8s is Kubernetes, but the posting's own word is absent."
+    },
+    {
+      "id": "alias-js",
+      "requirement": "Solid JavaScript fundamentals",
+      "resume": ["Languages: Python, JS, TS, SQL"],
+      "matched": true,
+      "method": "alias",
+      "why": "JS is JavaScript."
+    },
+    {
+      "id": "alias-hidden-behind-a-literal",
+      "requirement": "Hands-on with Docker and Kubernetes in production",
+      "resume": ["Migrated six containerised services to k8s using Docker"],
+      "matched": true,
+      "method": "alias",
+      "why": "Docker is literal but Kubernetes is only reachable via k8s, so the requirement is still filter-fragile."
+    },
+    {
+      "id": "conjunction-half-met",
+      "requirement": "Hands-on with Docker and Kubernetes in production",
+      "resume": ["Containerised the API with Docker"],
+      "matched": false,
+      "why": "Asks for both; only one is evidenced."
+    },
+    {
+      "id": "conjunction-both-met",
+      "requirement": "Experience with Postgres and Redis",
+      "resume": ["Cached hot Postgres reads in Redis, cutting p99 by 60%"],
+      "matched": true,
+      "method": "exact",
+      "why": "Both named, both present."
+    },
+    {
+      "id": "disjunction-one-is-enough",
+      "requirement": "Front-end work in React or TypeScript",
+      "resume": ["Built the analytics dashboard in React"],
+      "matched": true,
+      "method": "exact",
+      "why": "The posting offers a choice."
+    },
+    {
+      "id": "disjunction-neither",
+      "requirement": "Front-end work in React or TypeScript",
+      "resume": ["Wrote the backend in Django"],
+      "matched": false,
+      "why": "Neither option is evidenced."
+    },
+    {
+      "id": "plural-vector-databases",
+      "requirement": "Exposure to vector databases",
+      "resume": ["Served embeddings out of a vector database"],
+      "matched": true,
+      "method": "exact",
+      "why": "Plural in the posting, singular on the resume."
+    },
+    {
+      "id": "plural-microservices",
+      "requirement": "Experience building microservices",
+      "resume": ["Split the monolith into eight microservices"],
+      "matched": true,
+      "method": "exact",
+      "why": "Same word both sides."
+    },
+    {
+      "id": "ambiguous-go-prose",
+      "requirement": "Production experience with Go",
+      "resume": ["Worked with the rest of the team to go to production weekly"],
+      "matched": false,
+      "why": "\"go to production\" and \"the rest of\" are English, not Go and REST."
+    },
+    {
+      "id": "ambiguous-go-in-a-skills-list",
+      "requirement": "Production experience with Go",
+      "resume": ["Languages: Python, SQL, some Go"],
+      "matched": true,
+      "method": "exact",
+      "why": "A skills list corroborates the bare mention."
+    },
+    {
+      "id": "ambiguous-golang",
+      "requirement": "Production experience with Go",
+      "resume": ["Wrote the ingest service in golang"],
+      "matched": true,
+      "method": "alias",
+      "why": "golang is unambiguous and needs no corroboration."
+    },
+    {
+      "id": "ambiguous-react-verb",
+      "requirement": "Front-end work in React",
+      "resume": ["On call for the payments tier; react to incidents within ten minutes"],
+      "matched": false,
+      "why": "\"react to\" is the verb."
+    },
+    {
+      "id": "ambiguous-react-library",
+      "requirement": "Front-end work in React",
+      "resume": ["Built the internal admin console in React"],
+      "matched": true,
+      "method": "exact",
+      "why": "Plainly the library, and it should not need a second skill to prove it."
+    },
+    {
+      "id": "ambiguous-rest-prose",
+      "requirement": "Experience designing REST APIs",
+      "resume": ["Handled the rest of the migration after the lead left"],
+      "matched": false,
+      "why": "\"the rest of\" is English."
+    },
+    {
+      "id": "alias-rest-api",
+      "requirement": "Experience designing REST APIs at scale",
+      "resume": ["Designed a Flask REST API serving 40,000 daily requests"],
+      "matched": true,
+      "method": "exact",
+      "why": "Both say REST API."
+    },
+    {
+      "id": "absent-terraform",
+      "requirement": "Terraform or other infrastructure-as-code tooling",
+      "resume": ["Deployed with Docker Compose and a bash script"],
+      "matched": false,
+      "why": "No Terraform anywhere."
+    },
+    {
+      "id": "absent-rag",
+      "requirement": "Own the serving layer for our retrieval augmented generation stack",
+      "resume": ["Built an ingestion pipeline in Python and Pandas"],
+      "matched": false,
+      "why": "No RAG evidence."
+    },
+    {
+      "id": "unscoreable-years",
+      "requirement": "4+ years of professional backend engineering experience",
+      "resume": ["Backend engineer with four years building data-heavy services"],
+      "matched": false,
+      "scoreable": false,
+      "why": "Names no skill, so the deterministic matcher cannot rule on tenure. Must be reported, never scored."
+    },
+    {
+      "id": "unscoreable-degree",
+      "requirement": "Bachelor's degree in Computer Science or equivalent experience",
+      "resume": ["B.S. Computer Science, Northeastern University, 2020"],
+      "matched": false,
+      "scoreable": false,
+      "why": "Names no canonical skill."
+    },
+    {
+      "id": "unscoreable-prose-responsibility",
+      "requirement": "Partner with research to take prototypes to production",
+      "resume": ["Took three research prototypes to production with the ML team"],
+      "matched": false,
+      "scoreable": false,
+      "why": "A human would call this a match; the deterministic half cannot, and must say so rather than guess. This is the case the semantic pass exists for."
+    },
+    {
+      "id": "sklearn-alias",
+      "requirement": "Familiarity with scikit-learn",
+      "resume": ["Added a sklearn classifier that flagged anomalous shipments"],
+      "matched": true,
+      "method": "alias",
+      "why": "sklearn is scikit-learn."
+    },
+    {
+      "id": "ml-not-learning",
+      "requirement": "Machine learning experience",
+      "resume": ["Ran learning and development sessions for the team"],
+      "matched": false,
+      "why": "\"learning\" inside another phrase is not machine learning."
+    },
+    {
+      "id": "cpp-boundary",
+      "requirement": "Systems programming in C++",
+      "resume": ["Wrote the hot path in C++ and profiled it with perf"],
+      "matched": true,
+      "method": "exact",
+      "why": "Word boundaries do not fire on ++ and have to be asserted by hand."
+    },
+    {
+      "id": "csharp-not-c",
+      "requirement": "Backend services in C#",
+      "resume": ["Maintained a legacy C codebase"],
+      "matched": false,
+      "why": "C is not C#."
+    },
+    {
+      "id": "nodejs-alias",
+      "requirement": "Server-side JavaScript with Node.js",
+      "resume": ["Built the gateway on node with Express"],
+      "matched": true,
+      "method": "alias",
+      "why": "node is Node.js."
+    },
+    {
+      "id": "ci-cd",
+      "requirement": "Experience owning CI/CD pipelines",
+      "resume": ["Introduced pytest coverage gates in the CI/CD pipeline"],
+      "matched": true,
+      "method": "exact",
+      "why": "Same token both sides."
+    },
+    {
+      "id": "testing-via-pytest",
+      "requirement": "A real testing discipline",
+      "resume": ["Introduced pytest coverage gates, lifting coverage from 22% to 71%"],
+      "matched": true,
+      "method": "alias",
+      "why": "pytest evidences testing; the posting's word does not appear."
+    }
+  ]
+}
