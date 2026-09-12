@@ -353,5 +353,3 @@ layers. Still to build:
 - **Web UI**, the same way [TaxOrchestra](https://github.com/KrishB-2005/taxorchestra)
   does it: everything client-side, because a resume is a personal document and
   should not need a server.
-
-MIT.
